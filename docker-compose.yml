@@ -1,5 +1,3 @@
-version: '3.2'
-
 services:
   cnc:
     build:
@@ -10,7 +8,7 @@ services:
         ipv4_address: 192.168.10.10
       network2:
 
-    command: "mysqld_safe"
+    command: ["mysqld_safe"]
 
   attacker:
     image: alpine
@@ -20,21 +18,27 @@ services:
     command: ["sleep", "infinity"]
   
   victim_access:
-    image: alpine
+    build:
+      context: .
+      dockerfile: Victim
     networks:
       - network2
       - network1
     command: ["sleep", "infinity"]
 
   victim_internal1:
-    image: alpine
+    build:
+      context: .
+      dockerfile: Victim
     networks:
       - network2
       - network1
     command: ["sleep", "infinity"]
 
   victim_internal2:
-    image: alpine
+    build:
+      context: .
+      dockerfile: Victim
     networks:
       - network2
       - network1

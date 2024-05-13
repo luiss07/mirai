@@ -1,0 +1,6 @@
+FROM alpine
+
+RUN apk add busybox-extras curl
+RUN adduser -D admin
+RUN echo "admin:admin1234" | chpasswd
+RUN echo "telnet stream tcp nowait admin /usr/sbin/telnetd telnetd -i -l /bin/login" >> /etc/inetd.conf
