@@ -24,7 +24,9 @@ services:
     networks:
       - network2
       - network1
-    command: ["sleep", "infinity"]
+    ports:
+      - "23:9923"
+    command: ["/bin/sh", "-c", "telnetd && sleep infinity"]
 
   victim_internal1:
     build:
@@ -33,7 +35,7 @@ services:
     networks:
       - network2
       - network1
-    command: ["sleep", "infinity"]
+    command: ["/bin/sh", "-c", "telnetd && sleep infinity"]
 
   victim_internal2:
     build:
@@ -42,7 +44,7 @@ services:
     networks:
       - network2
       - network1
-    command: ["sleep", "infinity"]
+    command: ["/bin/sh", "-c", "telnetd && sleep infinity"]
 
 
 networks:
