@@ -1,5 +1,6 @@
 services:
   cnc:
+    container_name: mirai-cnc
     build:
       context: .
       dockerfile: Cnc
@@ -11,6 +12,7 @@ services:
     command: ["mysqld_safe"]
 
   attacker:
+    container_name: mirai-attacker
     image: alpine
     networks:
       - network1
@@ -18,6 +20,7 @@ services:
     command: ["sleep", "infinity"]
   
   victim_access:
+    container_name: mirai-victim-access
     build:
       context: .
       dockerfile: Victim
@@ -29,6 +32,7 @@ services:
     command: ["/bin/sh", "-c", "telnetd && sleep infinity"]
 
   victim_internal1:
+    container_name: mirai-victim-internal-1
     build:
       context: .
       dockerfile: Victim
@@ -38,6 +42,7 @@ services:
     command: ["/bin/sh", "-c", "telnetd && sleep infinity"]
 
   victim_internal2:
+    container_name: mirai-victim-internal-2
     build:
       context: .
       dockerfile: Victim
