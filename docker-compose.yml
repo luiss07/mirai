@@ -51,6 +51,16 @@ services:
       - network1
     command: ["/bin/sh", "-c", "telnetd && sleep infinity"]
 
+  nginx:
+    container_name: attack-me
+    image: nginx:latest
+    ports:
+      - "9999:80"
+    volumes: 
+      - /var/www/html:/usr/share/nginx/html
+    restart: always
+    networks:
+      - network1
 
 networks:
   network1:
@@ -59,6 +69,7 @@ networks:
       config:
         - subnet: 192.168.10.0/24
     internal: true
+
 
   network2:
     driver: bridge
