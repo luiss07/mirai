@@ -5,17 +5,16 @@ services:
       context: .
       dockerfile: Cnc
     networks:
-      network1:
-        ipv4_address: 192.168.10.10
       network2:
-
+        ipv4_address: 192.168.10.10
+    ports:
+      - "23:9925"
     command: ["mysqld_safe"]
 
   attacker:
     container_name: mirai-attacker
     image: alpine
     networks:
-      - network1
       - network2
     command: ["sleep", "infinity"]
   
@@ -25,8 +24,8 @@ services:
       context: .
       dockerfile: Victim
     networks:
-      - network2
-      - network1
+      network2:
+        ipv4_address: 192.168.10.5
     ports:
       - "23:9923"
     command: ["/bin/sh", "-c", "telnetd && sleep infinity"]
@@ -37,8 +36,8 @@ services:
       context: .
       dockerfile: Victim
     networks:
-      - network2
-      - network1
+      network2:
+        ipv4_address: 192.168.10.6
     command: ["/bin/sh", "-c", "telnetd && sleep infinity"]
 
   victim_internal2:
@@ -47,22 +46,15 @@ services:
       context: .
       dockerfile: Victim
     networks:
-      - network2
-      - network1
+      network2:
+        ipv4_address: 192.168.10.7
     command: ["/bin/sh", "-c", "telnetd && sleep infinity"]
 
 
 networks:
-  network1:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 192.168.10.0/24
-    internal: true
-
   network2:
     driver: bridge
     ipam:
       config:
-        - subnet: 192.168.20.0/24
+        - subnet: 192.168.10.0/24
     internal: true
