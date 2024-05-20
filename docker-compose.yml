@@ -52,6 +52,16 @@ services:
         ipv4_address: 192.168.10.8
     command: ["/bin/sh", "-c", "telnetd && sleep infinity"]
 
+  nginx:
+    container_name: attack-me
+    image: nginx:latest
+    ports:
+      - "9999:80"
+    volumes: 
+      - /var/www/html:/usr/share/nginx/html
+    restart: always
+    networks:
+      - network2
 
 networks:
   network2:
