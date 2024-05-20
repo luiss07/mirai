@@ -8,7 +8,6 @@
 #define DNS_1 0
 #define DNS_2 0
 #define DNS_3 11
-#define INIT_SCANNER
 #ifndef MIRAI_TELNET
 #define MIRAI_TELNET
 #endif

