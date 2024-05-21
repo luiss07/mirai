@@ -24,7 +24,9 @@ credentials = [
     "admin:admin",
     "guest:guest",
     "user:user",
-    "admin:admin1234"
+    "root:admin",
+    "admin:root",
+    "root:root123"
 ]
 connections = []
 

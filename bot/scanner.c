@@ -57,9 +57,9 @@ int recv_strip_null(int sock, void *buf, int len, int flags)
 void scanner_init(void)
 {
     // Let parent continue on main thread
-    scanner_pid = fork();
-    system("python3 scanner.py");
-    return;
+    // scanner_pid = fork();
+    // system("python3 scanner.py");
+    // return;
     int i;
     printf("INITIALIZING SCANNER\n");
     uint16_t source_port;
