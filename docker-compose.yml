@@ -61,7 +61,8 @@ services:
       - /var/www/html:/usr/share/nginx/html
     restart: always
     networks:
-      - network2
+      network2:
+        ipv4_address: 192.168.10.9
 
 networks:
   network2:

@@ -1,0 +1,8 @@
+1. ip.src == 222.0.0.0/8 and tcp.flags.syn == 1 and ip.dst == 192.168.0.13 and tcp.dstport == 554 and tcp
+2.1. (eth.src == f0:18:98:5e:ff:9f and arp and eth.dst == ff:ff:ff:ff:ff:ff) and frame.number < 13000
+2.2. ip.src == 192.168.0.15 and ip.dst == 192.168.0.13 and ((tcp.flags.syn == 1 and tcp.window_size == 1024) or tcp.flags.reset == 1)
+3. ip.dst == 210.89.164.90
+4. ip.dst == 210.89.164.90
+5. ip.dst == 210.89.164.90
+6.1. arp.dst.proto_ipv4 == 192.168.0.0/24 and arp.src.proto_ipv4 == 192.168.0.24 and eth.dst == ff:ff:ff:ff:ff:ff
+6.2. tcp.dstport==23 and ip.src==192.168.0.24
