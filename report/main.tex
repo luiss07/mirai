@@ -1,0 +1,56 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Template per Elaborato di Laurea
+% DISI - Dipartimento di Ingegneria e Scienza dell’Informazione
+%
+% update 2015-09-10
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[epsfig,a4paper,11pt,titlepage,twoside,openany]{book}
+
+\input{latex/packages}
+%\input{latex/newCommands}
+
+\singlespacing
+
+\makeglossaries
+%\input{glossaries}
+
+\begin{document}
+    
+    \pagenumbering{gobble} 
+    \input{latex/frontpage}
+    \clearpage
+    \cleardoublepage
+    
+    \pagestyle{plain}
+    
+    \mainmatter
+    
+    \tableofcontents
+    
+    \begingroup
+        %\renewcommand{\cleardoublepage}{} 
+        %\renewcommand{\clearpage}{} 
+        \titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
+        \titlespacing*{\chapter}{0pt}{0.59in}{0.02in}
+        \titlespacing*{\section}{0pt}{0.20in}{0.02in}
+        \titlespacing*{\subsection}{0pt}{0.10in}{0.02in}
+        \newpage
+        \input{latex/glossaries}
+        \newpage
+                
+        \glsresetall
+        
+        %\input{chapters/2-RelatedWork}
+        % Add other chapters in the "chapters/" folder
+
+    \endgroup
+
+    \addcontentsline{toc}{chapter}{Bibliografia}
+    \bibliographystyle{plain}
+    \bibliography{biblio}
+    
+    \titleformat{\chapter}{\normalfont\Huge\bfseries}{Allegato \thechapter}{1em}{}    
+\end{document}
