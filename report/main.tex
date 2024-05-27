@@ -38,17 +38,21 @@
         \titlespacing*{\section}{0pt}{0.20in}{0.02in}
         \titlespacing*{\subsection}{0pt}{0.10in}{0.02in}
         \newpage
-        \input{latex/glossaries}
+        %\input{latex/glossaries}
         \newpage
                 
         \glsresetall
         
-        %\input{chapters/2-RelatedWork}
-        % Add other chapters in the "chapters/" folder
+        \input{chapters/0-introduction.tex}
+        \input{chapters/1-mirai-static-analysis.tex}
+        \input{chapters/2-wireshark-analysis.tex}
+        \input{chapters/3-mirai-laboratory.tex}
+        \input{chapters/4-other-malware.tex}
+        \input{chapters/5-conclusion.tex}
 
     \endgroup
 
-    \addcontentsline{toc}{chapter}{Bibliografia}
+    \addcontentsline{toc}{chapter}{Bibliography}
     \bibliographystyle{plain}
     \bibliography{biblio}
     
