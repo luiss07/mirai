@@ -3,6 +3,22 @@
 
 \section{DDoS}
 
+A Distributed Denial of Service (DDoS) attack is an attempt to make an online service unavailable by overwhelming it with traffic from multiple sources. Whereas a Denial of Service (DoS) attack comes from a single source, DDoS attacks use multiple compromised devices, known as bots, to carry out the malicious activity. The bots are systems, typically IoT devices, infected with malware and together for a botnet, which can be controlled by the attacker to send commands remotely.
+
+There are different types of DDoS attacks:
+\begin{itemize}
+	\item \textbf{Volume-based attacks}: they overwhelm the bandwidth of the target, effectively choking the network and making the service unavailable. These attacks can be further differentiated into typical flood attack (e.g., UDP and ICMP flood), where the bots send a large number of packets, and amplification attacks (e.g., DNS amplification), in which attackers exploit services that respond with larger packets than they receive.
+	\item \textbf{Protocol attacks}: they exploit faults in network protocols to exhaust server resources. Some examples of these attacks are SYN flood (better explained in Chapter 3), Ping of Death, where malformed packets cause the target system to crash, and Smurf attacks, where the target's IP is spoofed and sends ICMP requests to a network causing the devices to send a large number of responses to the target.
+	\item \textbf{Application-layer attacks}: they target the seventh layer of the stack, where web pages are generated. For these attacks we can have typical HTTP flood, where multiple HTTP requests overwhelm the server, or attacks like Slowloris where the attacker keeps many connections open to exhaust server resources.
+\end{itemize}
+
+The impact of DDoS attack can have different effects:
+\begin{itemize}
+	\item \textbf{Operational disruption}: service interruption prevent legitimate users from accessing them and the target's workforce is diverted to manage and mitigate the attack, affecting the productivity.
+	\item \textbf{Financial costs}: the downtime of the service can have significant financial impact and also mitigation costs to deploy defences have to be considered.
+	\item \textbf{Reputational damage}: customer trust can be lost if users experience prolonged disruptions, leading to a negative brand image.
+\end{itemize}
+
 \section{Botnet}
 
 A botnet is a network of internet-connected devices, such as computers, smartphones or IoT devices, whose security has been compromised and control has been taken over by a third party. Botnets were initially designed for legitimate purposes, such as automating repetitive tasks or managing chatroom. However, their ability to execute code within other computers led to their misuse for malicious activities, such as stealing passwords, tracking user keystrokes, and launching attacks against unsuspecting devices. \cite{fortinet-botnet} They are one of the most common types of \textbf{network-based attacks} today due to their use of large, coordinated groups of hosts. These groups are created by infecting vulnerable hosts,  turning them into ``\textit{zombies}'' or \textbf{bots}, which can then be controlled remotely. When a collection of bots is managed by a \textbf{Command and Control} (CNC) infrastructure, it forms a botnet. Botnets help in obscuring the identity of the attacking host by providing a layer of indirection, separating the attacking host from its victim through zombie hosts, and separating the attack itself from the botnet assembly by an arbitrary amount of time. \cite{strayer2008botnet} The method of controlling bots varies based on the architecture of the botnet's command and control mechanisms, which can be \textbf{Internet Relay Chat} (IRC), \textbf{HTTP}, \textbf{DNS}, or \textbf{P2P-based}. 
