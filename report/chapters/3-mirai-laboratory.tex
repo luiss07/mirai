@@ -83,8 +83,63 @@ Additionally, there are other .pcap files that, instead of being attacks, repres
 
 By examining the packets in each .pcap file, key characteristics of different attack types are identified:
 \begin{itemize}
-	\item SYN Flood: a large number of SYN packets without corresponding ACK responses from the target. (Figure )
-	\item HTTP Flood: a high number of HTTP request packets, sent at a high frequency and with bare minimum content. (Figure )
-	\item ACK Flood: a significant number of ACK packets, typically without corresponding SYN or data packets. (Figure )
-	\item UDP Flood: a high frequency of UDP packets with various source and destination ports. (Figure )
+	\item \textbf{SYN Flood}: a large number of SYN packets without corresponding ACK responses from the target (Figure \ref{fig:pcap1})
+	\item \textbf{HTTP Flood}: a high number of HTTP request packets, sent at a high frequency and with bare minimum content (Figure \ref{fig:pcap5})
+	\item \textbf{ACK Flood}: a significant number of ACK packets, typically without corresponding SYN or data packets (Figure \ref{fig:pcap4})
+	\item \textbf{UDP Flood}: a high frequency of UDP packets with various source and destination ports (Figure \ref{fig:pcap3})
 \end{itemize}
+
+As for the other .pcap files:
+\begin{itemize}
+    \item \textbf{Host discovery}: multiple ARP packets are sent to discover and map out all possible hosts on a network to identify potential targets for infection and expansion of the botnet (Figure \ref{fig:pcap21})
+    \item \textbf{Port discovery}: many SYN packets on different ports of a device to identify open ones, indicating potential vulnerabilities, and potentially locating accessible entry points (Figure \ref{fig:pcap22})
+    \item \textbf{Brute force}: within the payload of Telnet packets, Mirai tries different username and password combinations (Figure \ref{fig:pcap6})
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\textwidth]{resources/images/pcap1.png}
+	\caption{SYN Flood}
+	\label{fig:pcap1}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\textwidth]{resources/images/pcap21.png}
+	\caption{Host discovery}
+	\label{fig:pcap21}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\textwidth]{resources/images/pcap22.png}
+	\caption{Port discovery}
+	\label{fig:pcap22}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\textwidth]{resources/images/pcap3.png}
+	\caption{UDP Flood}
+	\label{fig:pcap3}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\textwidth]{resources/images/pcap4.png}
+	\caption{ACK Flood}
+	\label{fig:pcap4}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\textwidth]{resources/images/pcap5.png}
+	\caption{HTTP Flood}
+	\label{fig:pcap5}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\textwidth]{resources/images/pcap6.png}
+	\caption{Brute force}
+	\label{fig:pcap6}
+\end{figure}
