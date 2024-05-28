@@ -28,6 +28,16 @@ The original directory hierarchy of Mirai is shown in \Cref{fig:folder-hierarchy
 
 Note that the following code snippets are taken from the original Mirai source code, but some part of the code might have been cut out for clarity.
 
+\section{Mirai Scanner}
+The Mirai scanner's source code can be found in the `scanner.c' file. The scanner is used by the bots to search for other devices which are potentially vulnerable to the Mirai malware. The search of the devices is performed using random IP addresses generated using the `get\_random\_ip' function. One interesting aspect of this function is that while being random it skips some IP addresses which are reserved for special purposes, such as the internal addresses or reserved ones. In addition to these addresses there are also some standard IPs which are avoided because, according to the comments in the code, belong to special entities e.g. the `Department of Defense' or the `US Postal Service'. The complete list can be found in Figure~\ref{fig:random_ip}. Instead of performing an entire telnet handshake to check the validity of an IP address the bot sends a TCP SYN packet and if the response it gets is a SYN+ACK packet it starts a dictionary attack against the host. The dictionary is composed of ~60 credentials which are known to be used as default ones (e.g. admin:admin, root:root), all the entries are encrypted to make the reverse engineering harder. More details on the encryption algorithm are provided in Section~\ref{section:ex1}. To handle the possible state transitions of the telnet interaction a switch statement that works as a state machine is used~\cite{de2018ddos}. Once a valid credential is found the bot sends the information to the reporting server which will share it with the loader server. The scanner is also able to detect if the device is already infected by checking if the device is listening on port 48101. If the device is already infected the bot will not try to infect it again~\cite{mirai-hackforum}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[scale=0.12]{resources/images/get_random_ip.png}
+    \caption{Whitelisted IPs in get\_random\_ip function}
+    \label{fig:random_ip}
+\end{figure}
+
 \section{Loader server}
 
 As we said in \Cref{chapter:introduction} the \textbf{Loader server} is in charge of receiving the vulnerabilities from the Reporting server and use them to load the malware on the reported devices. The vulnerabilities received must be in the following format:
@@ -81,12 +91,3 @@ Since the source code of the \texttt{handle\_event} is quite long, we will not s
 \end{figure}
 
 What we have said so far, can be summarized as follow: when a vulnerability result is received, it is added to a worker's list of vulnerabilities. All workers are actively waiting for elements in their lists to process. Once a vulnerability is available, a worker uses the information to access a weak device. It then identifies the device's architecture to load the appropriate executable. The worker tries to upload the binary code to the device using either wget or tftp . If neither is available, the ``echoloader'', which functions similarly to wget, is loaded onto the victim using the Linux echo command and is then used to upload the worm binary code. Once uploaded, it is executed and the device is turned into a Mirai bot.\cite{de2018ddos}
-
-\begin{figure}
-    \centering
-    \includegraphics[scale=0.12]{resources/images/get_random_ip.png}
-    \caption{Whitelisted IPs in get\_random\_ip function}
-    \label{fig:random_ip}
-\end{figure}
-\section{Mirai Scanner}
-The Mirai scanner's source code can be found in the `scanner.c' file. The scanner is used by the bots to search for other devices which are potentially vulnerable to the Mirai malware. The search of the devices is performed using random IP addresses generated using the `get\_random\_ip' function. One interesting aspect of this function is that while being random it skips some IP addresses which are reserved for special purposes, such as the internal addresses or reserved ones. In addition to these addresses there are also some standard IPs which are avoided because, according to the comments in the code, belong to special entities e.g. the `Department of Defense' or the `US Postal Service'. The complete list can be found in Figure~\ref{fig:random_ip}. Instead of performing an entire telnet handshake to check the validity of an IP address the bot sends a TCP SYN packet and if the response it gets is a SYN+ACK packet it starts a dictionary attack against the host. The dictionary is composed of ~60 credentials which are known to be used as default ones (e.g. admin:admin, root:root), all the entries are encrypted to make the reverse engineering harder. More details on the encryption algorithm are provided in Section~\ref{section:ex1}. To handle the possible state transitions of the telnet interaction a switch statement that works as a state machine is used~\cite{de2018ddos}. Once a valid credential is found the bot sends the information to the reporting server which will share it with the loader server. The scanner is also able to detect if the device is already infected by checking if the device is listening on port 48101. If the device is already infected the bot will not try to infect it again~\cite{mirai-hackforum}.
