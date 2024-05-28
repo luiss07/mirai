@@ -62,3 +62,29 @@ Together with the user accounts the database also stores a list of \texttt{white
     \caption{Database content after adding the new user}
     \label{fig:table_users}
 \end{figure}
+
+\section{Launch an attack}
+
+From the CNC panel, a specific attack is launched and the network traffic is captured using Wireshark. To initiate an attack, one of the available attack commands listed by the `?' command can be used. The syntax of the command is [attack\textunderscore type] [target\textunderscore ip] [duration], specifying the needed information for the attack.
+ 
+After launching the attack, Wireshark is used to monitor the network traffic. In Wireshark, a message sent from the CNC server to the bots should be observable, found in Figure \ref{fig:wireshark_attack}. This message contains all the necessary information for the bots to execute the attack, including the type of attack, the target IP address, the duration of the attack, and the number of bots involved.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\textwidth]{resources/images/wireshark_attack.png}
+	\caption{Packet containing attack information}
+	\label{fig:wireshark_attack}
+\end{figure}
+
+\section{Exercise 5: Traffic analysis}
+
+In this exercise, different .pcap files containing realistic analyses of Mirai attacks are provided. The scope of the exercise is to examine the packets within each .pcap file and determine which type of attack is represented.
+Additionally, there are other .pcap files that, instead of being attacks, represent host and port discovery and brute force of the credentials.
+
+By examining the packets in each .pcap file, key characteristics of different attack types are identified:
+\begin{itemize}
+	\item SYN Flood: a large number of SYN packets without corresponding ACK responses from the target. (Figure )
+	\item HTTP Flood: a high number of HTTP request packets, sent at a high frequency and with bare minimum content. (Figure )
+	\item ACK Flood: a significant number of ACK packets, typically without corresponding SYN or data packets. (Figure )
+	\item UDP Flood: a high frequency of UDP packets with various source and destination ports. (Figure )
+\end{itemize}
