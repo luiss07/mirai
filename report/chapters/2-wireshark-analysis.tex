@@ -1,1 +1,52 @@
 \chapter{Traffic analysis}
+
+Mirai can launch a wide array of DDoS attacks aimed to overwhelm targeted systems, rendering them inaccessible to legitimate users. Among the numerous attack methods Mirai employs, the most notorious ones are the SYN flood attack that exploits the TCP handshake process to exhaust server resources. HTTP flood attacks target web servers to degrade their performance or take them offline entirely. Another method is flooding the target with ACK packets, aiming to consume bandwidth and processing power. Lastly, the UDP flood attack sends numerous UDP packets to random ports on the target, overwhelming the server's ability to handle incoming traffic.
+
+\section{SYN Flood Attack}
+
+A SYN flood attack exploits the TCP handshake process. When a client attempts to establish a TCP connection with a server, it sends a SYN (synchronize) packet, the server responds with a SYN-ACK (synchronize-acknowledge) packet, and the client then replies with an ACK (acknowledge) packet, completing the handshake. 
+
+In a SYN flood attack, the bots sends a large number of SYN packets to the target server, but never complete the handshake by sending the final ACK packet. This leaves the server with many half-open connections, since its connection table will be completely filled. This consumes the resources of the server and it will not be able to handle legitimate traffic.
+
+An interesting mitigation are SYN cookies, a technique invented by Daniel J. Bernstein, which involves sending the SYN-ACK response with a crafted sequence number that encodes information about the initial connection request. Only if the client replies correctly with an ACK, resources are allocated for the communication.
+
+\section{HTTP Flood Attack}
+
+In an HTTP flood attack, the bots send a large number of HTTP requests to the target web server. The overwhelming number of requests exhaust the server's CPU and memory. Unlike other types of DDoS attacks that aim to overwhelm the network or transport layer, HTTP flood acts at the application layer.
+
+HTTP flood attacks can either follow the aforementioned basic implementation (i.e., sending numerous HTTP requests) or send HTTP request at a slow rate in order to appear legitimate keep connections open and exhaust server resources (e.g., Slowloris).
+
+\section{ACK Flood Attack}
+
+ACK packets are used to acknowledge the receipt of data in the TCP protocol and every data packet sent must be acknowledged by the receiver. An ACK flood attack involves sending a flood of these packets to the target with the intent of saturating its network bandwidth and processing capability.
+
+A possible mitigation is the traffic filtering of ACK packets without corresponding SYN packets, although this will also require processing.
+
+\section{UDP Flood Attack}
+
+UDP flood attacks involve sending a large number of UDP packets to random ports on the target system. Since UDP is a connectionless protocol, used for example for streaming, the target system must process each packet, checking for applications listening on these ports, and send an ICMP ``Destination Unreachable" packet if the port is closed. This can quickly overwhelm the target's resources.
+
+\paragraph{Comparison.}
+
+In Table \ref{tab:comparion}, we can see a summary of the attacks.
+
+\begin{table}[h!]
+	\centering
+	\begin{threeparttable}
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{Attack Type} & \textbf{Layers Targeted} & \textbf{Detection Complexity} & \textbf{Resource Impact} \\
+		\midrule
+		SYN Flood  & Network/Transport Layer & Moderate & Connection resources \\
+		ACK Flood  & Network/Transport Layer & Moderaten  & Processing resources \\
+		HTTP Flood & Application Layer & High \tnote{*} & CPU and memory \\
+		UDP Flood  & Network Layer  & Moderate & CPU, memory, and bandwidth \\
+		\bottomrule
+	\end{tabular}
+	\begin{tablenotes}
+		\item[*] requires application layer inspection
+	\end{tablenotes}
+	\end{threeparttable}
+	\caption{Summary of Attack Types}
+	\label{tab:comparion}
+\end{table}
